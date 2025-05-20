@@ -30,6 +30,15 @@ public class Product {
     private String imageUrl; // Convention camelCase en Java
 
     private Integer stockQuantity;
+private String specification;
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
 
     @ManyToOne
     @JoinColumn(name = "category_id")

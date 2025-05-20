@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewMapper {
 
-    public  ReviewDTO toDTO(Review review) {
+    public ReviewDTO toDTO(Review review) {
         ReviewDTO dto = new ReviewDTO();
         dto.setId(review.getId());
         dto.setComment(review.getComment());
@@ -20,14 +20,15 @@ public class ReviewMapper {
         dto.setUserName(review.getUser().getName());
         dto.setProductId(review.getProduct().getId());
         dto.setProductName(review.getProduct().getName());
-        dto.setSentiment(String.valueOf(review.getSentiment()));
+        dto.setSentiment(review.getSentiment() != null ? review.getSentiment().toString() : null);
         dto.setSentimentScore(review.getSentimentScore());
-        dto.setStatus(String.valueOf(review.getStatus()));
+        dto.setStatus(review.getStatus() != null ? review.getStatus().toString() : null);
         dto.setAdminComment(review.getAdminComment());
-        dto.setCreatedAt(review.getCreatedAt().toString());
-        dto.setUpdatedAt(review.getUpdatedAt().toString());
+        dto.setCreatedAt(review.getCreatedAt() != null ? review.getCreatedAt().toString() : null);
+        dto.setUpdatedAt(review.getUpdatedAt() != null ? review.getUpdatedAt().toString() : null);
         return dto;
     }
+
 
     public  Review toEntity(ReviewCreateDTO dto) {
         Review review = new Review();

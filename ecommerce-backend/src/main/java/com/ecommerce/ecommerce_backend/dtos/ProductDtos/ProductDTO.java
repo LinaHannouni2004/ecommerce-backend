@@ -14,7 +14,15 @@ public class ProductDTO {
     private Integer stockQuantity;
     private Long categoryId;
     private String categoryName;
+    private String specification;
 
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
     public void setId(Long id) {
         this.id = id;
     }

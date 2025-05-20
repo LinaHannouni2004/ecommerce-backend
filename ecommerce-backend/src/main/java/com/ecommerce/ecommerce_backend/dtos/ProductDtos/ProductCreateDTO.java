@@ -22,7 +22,15 @@ public class ProductCreateDTO {
     private String imageUrl;
     private Long categoryId;
 
+    private String specification;
 
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
 
 
 

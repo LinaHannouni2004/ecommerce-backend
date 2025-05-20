@@ -19,6 +19,7 @@ public class ProductMapper {
         dto.setStockQuantity(product.getStockQuantity());
         dto.setCategoryId(product.getCategory().getId());
         dto.setCategoryName(product.getCategory().getName());
+        dto.setSpecification(product.getSpecification());
         return dto;
     }
 
@@ -29,6 +30,7 @@ public class ProductMapper {
         product.setPrice(dto.getPrice());
         product.setImageUrl(dto.getImageUrl());
         product.setStockQuantity(dto.getStockQuantity());
+        product.setSpecification(dto.getSpecification());
         return product;
     }
 
@@ -52,7 +54,9 @@ public class ProductMapper {
         if (dto.getImageUrl() != null) {
             product.setImageUrl(dto.getImageUrl());
         }
-
+if(dto.getSpecification() != null) {
+    product.setSpecification(dto.getSpecification());
+}
         // Note: La catégorie est gérée séparément dans le service
         // comme visible dans votre méthode updateProduct
     }

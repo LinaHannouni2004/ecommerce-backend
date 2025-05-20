@@ -42,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(dto.getPrice());
         product.setImageUrl(dto.getImageUrl());
         product.setStockQuantity(dto.getStockQuantity());
+        product.setSpecification(dto.getSpecification());
 
         // ✅ On récupère la catégorie depuis son ID
         Category category = categoryRepository.findById(dto.getCategoryId())
@@ -102,7 +103,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.searchProducts(query, pageable)
                 .map(productMapper::toDTO);
     }
-
-
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductDTO> getProductsByCategory(String categoryName, Pageable pageable) {
+        return productRepository.findByCategoryNameIgnoreCase(categoryName, pageable)
+                .map(productMapper::toDTO);
+    }
 
 }

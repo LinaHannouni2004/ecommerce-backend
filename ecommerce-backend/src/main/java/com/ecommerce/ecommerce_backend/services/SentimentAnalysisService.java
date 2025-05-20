@@ -2,39 +2,35 @@ package com.ecommerce.ecommerce_backend.services;
 
 import com.ecommerce.ecommerce_backend.dtos.SentimentAnalysisResult;
 import com.ecommerce.ecommerce_backend.enums.SentimentLabel;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.Map;
 
 @Service
 public class SentimentAnalysisService {
 
+    private final RestTemplate restTemplate = new RestTemplate();
+
     public SentimentAnalysisResult analyzeText(String text) {
-        // Implémentation simulée - en production utiliseriez un service d'IA réel
-        double score = calculateSentimentScore(text);
-        SentimentLabel sentiment = classifySentiment(score);
+        String url = "http://localhost:5000/analyze";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return new SentimentAnalysisResult(sentiment, score);
-    }
+        Map<String, String> body = Map.of("text", text);
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
-    private double calculateSentimentScore(String text) {
-        // Logique simplifiée de calcul de score
-        String lowerText = text.toLowerCase();
-        int positiveWords = countMatches(lowerText, List.of("good", "great", "excellent"));
-        int negativeWords = countMatches(lowerText, List.of("bad", "poor", "terrible"));
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
 
-        return (positiveWords - negativeWords) / 10.0; // Normalisé entre -1 et 1
-    }
+        Map<String, Object> responseBody = response.getBody();
 
-    private int countMatches(String text, List<String> words) {
-        return (int) words.stream()
-                .filter(text::contains)
-                .count();
-    }
+        SentimentAnalysisResult result = new SentimentAnalysisResult();
+        result.setScore(((Number) responseBody.get("polarity")).doubleValue());
 
-    private SentimentLabel classifySentiment(double score) {
-        if (score > 0.3) return SentimentLabel.POSITIVE;
-        if (score < -0.3) return SentimentLabel.NEGATIVE;
-        return SentimentLabel.NEUTRAL;
+        String sentimentStr = (String) responseBody.get("sentiment");
+        result.setSentiment(SentimentLabel.valueOf(sentimentStr.toUpperCase()));
+
+        return result;
     }
 }

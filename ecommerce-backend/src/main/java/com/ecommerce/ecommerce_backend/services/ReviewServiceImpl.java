@@ -28,13 +28,16 @@ public class ReviewServiceImpl implements ReviewService {
     private final SentimentAnalysisService sentimentAnalysisService;
 
     @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository,ProductRepository productRepository,UserRepository userRepository, SentimentAnalysisService sentimentAnalysisService) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ProductRepository productRepository,
+                             UserRepository userRepository, SentimentAnalysisService sentimentAnalysisService,
+                             ReviewMapper reviewMapper) {
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.sentimentAnalysisService = sentimentAnalysisService;
-        this.reviewMapper = new ReviewMapper();
+        this.reviewMapper = reviewMapper;
     }
+
 
     @Override
     @Transactional
@@ -117,6 +120,14 @@ public class ReviewServiceImpl implements ReviewService {
 
     public List<ReviewDTO> getReviewsNeedingModeration() {
         return reviewRepository.findByStatus(ReviewStatus.NEEDS_MANUAL_REVIEW).stream()
+                .map(reviewMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewDTO> getAllReviews() {
+        return reviewRepository.findAll().stream()
                 .map(reviewMapper::toDTO)
                 .collect(Collectors.toList());
     }
